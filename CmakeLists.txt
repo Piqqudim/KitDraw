@@ -7,6 +7,22 @@ if(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build Type" FORCE)
 endif()
 
+add_library(Imgui STATIC 
+           ThirdParty/imgui/imgui.cpp
+           ThirdParty/imgui/imgui_draw.cpp
+           ThirdParty/imgui/imgui_demo.cpp
+           ThirdParty/imgui/imgui_tables.cpp
+           ThirdParty/imgui/imgui_widgets.cpp
+           ThirdParty/imgui/backends/imgui_impl_glfw.cpp
+           ThirdParty/imgui/backends/imgui_impl_opengl3.cpp
+)
+target_include_directories(Imgui PUBLIC 
+                           ThirdParty
+                           ThirdParty/imgui
+                           ThirdParty/imgui/backends)
+target_link_libraries(Imgui PUBLIC glfw3 glbinding opengl32)  
+target_link_directories(Imgui PUBLIC lib)
+
 add_executable(KitDraw 
                src/main.cpp 
                      )
@@ -20,5 +36,5 @@ target_include_directories(KitDraw PUBLIC
                            ThirdParty/imgui/backends
 )
 
-target_link_libraries(KitDraw PUBLIC glbinding.dll glfw3dll imgui.dll opengl32)
+target_link_libraries(KitDraw PUBLIC Imgui opengl32 glbinding glfw3)
 target_link_directories(KitDraw PUBLIC lib)

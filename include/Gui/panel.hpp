@@ -1,6 +1,9 @@
 #include "imgui.h"
-
-void DrawTestPanel(){
+#include<iostream>
+using namespace std;
+namespace KitDraw{
+inline void DrawTestPanel(){
+    std::cout<<"Drawing Panel"<<"\n";
     static float speed = 5.0f;
     static bool enabled = true;
     static int counter = 0;
@@ -9,7 +12,7 @@ void DrawTestPanel(){
     ImGui::Begin("Test Panel");
     ImGui::Text("Hello from ImGui");
 
-    ImGui::Separator();
+   ImGui::Separator();
     ImGui::Text("Entity Settings");
 
     ImGui::InputText("Name", name,sizeof(name));
@@ -35,4 +38,5 @@ void DrawTestPanel(){
     }
 
     ImGui::End();
+}
 }

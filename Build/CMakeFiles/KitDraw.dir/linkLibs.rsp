@@ -1,0 +1,1 @@
+  -LC:/Users/USER/Documents/KitDraw/lib  libImgui.a -lopengl32 -lglbinding -lglfw3 -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
