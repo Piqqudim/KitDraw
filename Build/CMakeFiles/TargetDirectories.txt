@@ -1,4 +1,0 @@
-C:/Users/USER/Documents/KitDraw/Build/CMakeFiles/Imgui.dir
-C:/Users/USER/Documents/KitDraw/Build/CMakeFiles/KitDraw.dir
-C:/Users/USER/Documents/KitDraw/Build/CMakeFiles/edit_cache.dir
-C:/Users/USER/Documents/KitDraw/Build/CMakeFiles/rebuild_cache.dir
