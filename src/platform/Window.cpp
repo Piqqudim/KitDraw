@@ -1,14 +1,46 @@
 #include<stdexcept>
 #include<utility>
 #include<iostream>
+#include "core/Event.hpp"
 #include "platform/Window.hpp"
 #include <glbinding/gl/gl.h>
 #include <glbinding/glbinding.h>
-
 #include<GLFW/glfw3.h>
 using namespace std;
 namespace KitDraw::platform {
-    Window::Window(const WindowDesc& desc): _width(desc.width), _height(desc.height){
+    namespace{
+        core::EventQueue& queueFrom(GLFWwindow* w){
+            return *static_cast<core::EventQueue*>(glfwGetWindowUserPointer(w));
+        }
+
+        void onResize(GLFWwindow* w, int width, int height){
+            queueFrom(w).push(core::WindowResizeEvent{width, height});
+        }
+
+        void onClose(GLFWwindow* w){
+            queueFrom(w).push(core::WindowCloseEvent{});
+        }
+
+        void onKey(GLFWwindow* w, int key, int, int action, int){
+            core::KeyAction a = action ==GLFW_PRESS ? core::KeyAction::Pressed: action == GLFW_RELEASE ? core::KeyAction::Released : core::KeyAction::Repeated;
+            queueFrom(w).push(core::KeyEvent{key, a});
+        }
+        void onMouseButton(GLFWwindow* w, int button, int action, int){
+            double x, y;
+            glfwGetCursorPos(w, &x, &y);
+            auto a = action == GLFW_PRESS ? core::MouseButtonAction::Pressed : core::MouseButtonAction::Released;
+            queueFrom(w).push(core::MouseButtonEvent { button, a , x, y});
+        }
+
+        void onCursorPos(GLFWwindow* w, double x, double y){
+            queueFrom(w).push(core::MouseMoveEvent{x, y});
+        }
+
+        void onScroll(GLFWwindow* w, double xoff, double yoff){
+            queueFrom(w).push(core::MouseScrollEvent{xoff, yoff});
+        }
+    }
+    Window::Window(const WindowDesc& desc, core::EventQueue& queue): queue_(&queue), _width(desc.width), _height(desc.height){
         static bool glfwInitiated = false;
         if(!glfwInitiated){
             if(!glfwInit()) cout<< "Failed to initialize GLFW\n" ;
@@ -32,18 +64,39 @@ namespace KitDraw::platform {
 
         glfwMakeContextCurrent(handle_);
         glfwSwapInterval(desc.vsync ? 1 : 0);
-        glfwSetWindowUserPointer(handle_, this);
+        glfwSetWindowUserPointer(handle_, queue_);
+        installCallbacks(handle_);
 
-        glfwSetFramebufferSizeCallback(handle_ , [](GLFWwindow* window, int width, int height){
-            auto* self = static_cast<Window*>(glfwGetWindowUserPointer(window));
-            self->_width = width;
-            self-> _height = height;
-        });
 
+    }
+
+    void Window::installCallbacks(GLFWwindow* handle) {
+        glfwSetFramebufferSizeCallback(handle, onResize);
+        glfwSetWindowCloseCallback(handle, onClose);
+        glfwSetKeyCallback(handle, onKey);
+        glfwSetMouseButtonCallback(handle, onMouseButton);
+        glfwSetCursorPosCallback(handle, onCursorPos);
+        glfwSetScrollCallback(handle, onScroll);
     }
 
     Window::~Window(){
         if(handle_) glfwDestroyWindow(handle_);
+    }
+
+    Window::Window(Window&& other)noexcept:handle_(std::exchange(other.handle_, nullptr)), queue_(std::exchange(other.queue_, nullptr)), _width(other._width), _height(other._height){
+        if(handle_) glfwSetWindowUserPointer(handle_, queue_);
+    }
+
+    Window& Window::operator=(Window&& other) noexcept{
+        if(this != &other){
+            if(handle_) glfwDestroyWindow(handle_);
+            handle_ = std::exchange(other.handle_, nullptr);
+            queue_ = std::exchange(other.queue_, nullptr);
+            _width = other._width;
+            _height = other._height;
+            if(handle_) glfwSetWindowUserPointer(handle_,queue_);
+        }
+        return *this;
     }
 
     bool Window::shouldClose() const { return glfwWindowShouldClose(handle_);}

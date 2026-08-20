@@ -32,6 +32,7 @@ add_executable(KitDraw
                src/Renderer/Renderer.cpp
                src/Renderer/BrushRenderer.cpp
                src/Renderer/Layer.cpp
+               src/core/InputState.cpp
 
                )
 target_include_directories(KitDraw PUBLIC 

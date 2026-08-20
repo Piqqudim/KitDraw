@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include "core/Event.hpp"
 using namespace std;
 
 struct GLFWwindow;
@@ -15,13 +16,13 @@ namespace KitDraw::platform {
 
     class Window {
         public:
-        explicit Window(const WindowDesc& desc);
+        explicit Window(const WindowDesc& desc, core::EventQueue& queue);
         ~Window();
 
         Window(const Window&) = delete;
         Window& operator=(const Window&) = delete;
-        Window(Window&& other) noexcept = delete;
-        Window& operator =(Window&& other) noexcept = delete;
+        Window(Window&& other) noexcept ;
+        Window& operator=(Window&& other) noexcept ;
 
         bool shouldClose() const;
         void pollEvents();
@@ -33,7 +34,10 @@ namespace KitDraw::platform {
 
 
         private:
+        static void installCallbacks(GLFWwindow* handle);
+
         GLFWwindow* handle_= nullptr;
+        core::EventQueue* queue_ = nullptr;
         int _width = 0;
         int _height = 0;
     };
