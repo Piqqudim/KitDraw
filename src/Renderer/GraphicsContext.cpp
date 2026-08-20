@@ -1,10 +1,10 @@
 #include "Renderer/GraphicsContext.hpp"
 #include "platform/Window.hpp"
-#include "GLFW/glfw3.h"
-#include <glbinding/glbinding.h>
-#include <glbinding/gl33core/gl.h>
 
-using namespace gl33core;
+#include <glbinding/glbinding.h>
+#include <glbinding/gl/gl.h>
+#include "GLFW/glfw3.h"
+using namespace gl;
 
 namespace KitDraw::render{
     GraphicsContext::GraphicsContext(platform::Window& window){

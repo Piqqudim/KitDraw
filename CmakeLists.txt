@@ -25,8 +25,14 @@ target_link_directories(Imgui PUBLIC lib)
 
 add_executable(KitDraw 
                src/main.cpp 
-                     )
+               src/platform/Window.cpp
+               src/Renderer/Camera.cpp
+               src/Renderer/GraphicsContext.cpp
+               src/Renderer/Shader.cpp
+
+               )
 target_include_directories(KitDraw PUBLIC 
+                           include
                            include/Gui
                            include/Renderer
                            ThirdParty

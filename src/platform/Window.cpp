@@ -1,8 +1,11 @@
-#include<GLFW/glfw3.h>
 #include<stdexcept>
 #include<utility>
-#include "platform/Window.hpp"
 #include<iostream>
+#include "platform/Window.hpp"
+#include <glbinding/gl/gl.h>
+#include <glbinding/glbinding.h>
+
+#include<GLFW/glfw3.h>
 using namespace std;
 namespace KitDraw::platform {
     Window::Window(const WindowDesc& desc): _width(desc.width), _height(desc.height){
@@ -22,7 +25,7 @@ namespace KitDraw::platform {
         if(!handle_){
             cerr<< "Failed to create GLFW window";
             glfwTerminate();
-            return -1;
+            return ;
 
 
         }

@@ -1,19 +1,20 @@
 #include "Renderer/Shader.hpp"
-#include <glbinding/gl33core/gl.h>
+#include <glbinding/gl/gl.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
 #include <vector>
 #include <utility>
 #include<fstream>
-using namespace gl33core;
+#include<iostream>
+using namespace gl;
 using namespace std;
 
 namespace KitDraw::render {
     namespace{
         GLuint compile(GLenum stage, const string& source){
-            Gluint shader = glCreateShader(stage);
+            GLuint shader = glCreateShader(stage);
             const char* src = source.c_str();
-            glShaderSource(shader);
+            glShaderSource(shader, 1, &src, nullptr);
 
             GLint success = 0;
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -31,9 +32,9 @@ namespace KitDraw::render {
 
     Shader::Shader(const string& vertexSource,const std::string& fragmentSource){
         GLuint vs = compile(GL_VERTEX_SHADER,vertexSource);
-        GLuint fg = compile(GL_FRAGMENT_SHADER,fragmentSource);
+        GLuint fs = compile(GL_FRAGMENT_SHADER,fragmentSource);
 
-        program = glCreateProgram();
+        program_= glCreateProgram();
         glAttachShader(program_, vs);
         glAttachShader(program_, fs);
         glLinkProgram(program_);
@@ -63,7 +64,7 @@ namespace KitDraw::render {
             if(program_) glDeleteProgram(program_);
             program_ = exchange(other.program_, 0);
         }
-        return *this
+        return *this;
     }
 
     void Shader::bind() const { glUseProgram(program_); }
@@ -81,9 +82,9 @@ namespace KitDraw::render {
         glUniform2fv(glGetUniformLocation(program_, name), 1, glm::value_ptr(value));
     }
     void Shader::setUniformVec3(const char* name, const glm::vec3& value) const {
-        glUniform3fv(glGetUniformLocation(program_,name), glm::value_ptr(value));
+        glUniform3fv(glGetUniformLocation(program_,name), 1, glm::value_ptr(value));
     }
     void Shader::setUniformVec4(const char* name, const glm::vec4& value) const {
-        glUniform4fv(glGetUniformLocation(program_, name), glm::value_ptr(value));
+        glUniform4fv(glGetUniformLocation(program_, name),1, glm::value_ptr(value));
     }
 }

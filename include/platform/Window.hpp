@@ -2,7 +2,7 @@
 #include<string>
 using namespace std;
 
-struct GLFWwindows;
+struct GLFWwindow;
 
 namespace KitDraw::platform {
     struct WindowDesc {
@@ -20,8 +20,8 @@ namespace KitDraw::platform {
 
         Window(const Window&) = delete;
         Window& operator=(const Window&) = delete;
-        Window(Window&& other) noexcept = delete
-        Window& operator =(Window&& other) noexcept = delete
+        Window(Window&& other) noexcept = delete;
+        Window& operator =(Window&& other) noexcept = delete;
 
         bool shouldClose() const;
         void pollEvents();
@@ -29,12 +29,12 @@ namespace KitDraw::platform {
 
         int width() const noexcept { return _width;}
         int height() const noexcept { return _height;}
-        GLFWwindows* handle() const noexcept{ return handle_; }
+        GLFWwindow* handle() const noexcept{ return handle_; }
 
 
         private:
-        GLFWwindows* handle_= nullptr;
+        GLFWwindow* handle_= nullptr;
         int _width = 0;
         int _height = 0;
-    }
+    };
 }// namespace windows
