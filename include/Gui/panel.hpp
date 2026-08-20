@@ -5,7 +5,7 @@ namespace KitDraw{
 inline void DrawTestPanel(){
     std::cout<<"Drawing Panel"<<"\n";
     static float speed = 5.0f;
-    static bool enabled = true;
+    static bool enabled = true;  
     static int counter = 0;
 
     static char name[128] = "my Entity";

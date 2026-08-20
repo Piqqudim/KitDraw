@@ -15,6 +15,7 @@ namespace KitDraw::render {
             GLuint shader = glCreateShader(stage);
             const char* src = source.c_str();
             glShaderSource(shader, 1, &src, nullptr);
+            glCompileShader(shader);
 
             GLint success = 0;
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -24,7 +25,7 @@ namespace KitDraw::render {
                 vector<char> log(static_cast<size_t>(logLength));
                 glGetShaderInfoLog(shader,logLength, nullptr, log.data());
                 glDeleteShader(shader);
-                cout<<"Shader compile error:"<<string(log.begin(), log.end()) << endl;
+               cerr<<"Shader compile error :" << "+" <<  string(log.begin(), log.end())<< '\n';
             }
             return shader;
         }

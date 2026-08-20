@@ -29,6 +29,9 @@ add_executable(KitDraw
                src/Renderer/Camera.cpp
                src/Renderer/GraphicsContext.cpp
                src/Renderer/Shader.cpp
+               src/Renderer/Renderer.cpp
+               src/Renderer/BrushRenderer.cpp
+               src/Renderer/Layer.cpp
 
                )
 target_include_directories(KitDraw PUBLIC 
